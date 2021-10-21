@@ -45,6 +45,18 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
+        for state in mdp.getStates():
+            v = []
+            for k in range(iterations):
+                max_action = None
+                for action in mdp.getPossibleActions(state):
+                    sum_state = 0
+                    max_state = None
+                    
+                    for state_prob in mdp.getTransitionStatesAndProbs(state, action):
+                        sum_state += state_prob[1]*getValue(state_prob[0])
+                v.append(mdp.getReward(state, max_action, ) + self.discount*)
+            getValue(state) = v[-1]
 
 
     def getValue(self, state):
