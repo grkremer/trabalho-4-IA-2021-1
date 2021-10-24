@@ -75,7 +75,6 @@ class QLearningAgent(ReinforcementAgent):
           are no legal actions, which is the case at the terminal state,
           you should return None.
         """
-        #value = self.computeValueFromQValues(state)
         max_q = float('-inf')
         best_action = None
         for action in self.getLegalActions(state):
@@ -98,12 +97,10 @@ class QLearningAgent(ReinforcementAgent):
         """
         # Pick Action
         legalActions = self.getLegalActions(state)
-        #action = None
         if util.flipCoin(self.epsilon):
           return random.choice(legalActions)
         else:
           return self.computeActionFromQValues(state)
-        #return action
 
     def update(self, state, action, nextState, reward):
         """
@@ -176,15 +173,22 @@ class ApproximateQAgent(PacmanQAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        features = self.featExtractor.getFeatures(state, action)
+        print(features)
+        dot_product = 0
+        for i in range(len(features)):
+          dot_product += features[(state,action)]*self.weights[i]
+        self.q_values[(state, action)] = dot_product
+        return self.q_values[(state, action)]
 
     def update(self, state, action, nextState, reward):
         """
            Should update your weights based on transition
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        delta = reward + self.discount*self.computeValueFromQValues(nextState) - self.getQValue(state, action)
+        features = self.featExtractor.getFeatures(state, action)
+        for i in range(len(self.getWeights())):
+          self.weights[i] = self.weights[i] + self.alpha*delta*features[(state,action)]
 
     def final(self, state):
         "Called at the end of each game."
